@@ -1,0 +1,25 @@
+
+<h2>Agregar tareas</h2>
+
+
+<form action="<?php echo APP_URL.'tareas/add';?>" method="POST" accept-charset="utf-8">
+	
+	<p>Nombre <input type="text" name="nombre" value=""></p>
+	<p>Categoria<select name="categoria_id">
+	 
+<?php foreach ($this->categoria as $categorias): ?>
+
+<option value="<?php echo $categorias["id"] ?>">
+<?php	echo $categorias["nombre"]; ?> 
+	
+</option>
+
+
+<?php endforeach; ?>
+</select>
+	</p>
+	<p>Fecha<input type="text" name="fecha" value=""></p>
+	<p>Prioridad<input type="text" name="prioridad" value=""></p>
+	<p>Status<input type="text" name="status" value=""></p>
+	<p><input type="submit"></p>
+</form>

@@ -1,0 +1,142 @@
+<?php
+/**
+ * :: operaradores de ambito en php
+ * 
+ * 
+ * */
+
+class UsuariosController extends AppController{
+	public function __construct(){
+		parent::__construct();
+	}
+
+public function index(){
+		$this->_view->titulo = "Listado de usuarios";
+		$this->_view->usuario= $this->db->find('usuarios', 'all');
+		$this->_view->renderizar('index');
+		//$tareas = $this->loadmodel("tarea");
+		//$this->_view->tareas = $tareas->getTareas();
+		// TITULO QUE SE VISUALZARA EN LA URL.
+		//$this->_view->renderizar("index");
+
+}
+
+public function edit($id = NULL){
+	
+	if ($_POST){
+			if($this->db->update('usuarios', $_POST)){
+	           $this->redirect(
+	      	          array('controller'=>'usuarios','action'=>'index'
+	      	          	)
+	      	        );
+        }else{
+        	$this->redirect(
+        	          array(
+        	                'controller'=>'usuarios',
+        	                'action'=>'edit/'.$_POST['id']
+        	               )
+        	          );
+                }
+
+        }else{
+
+		$conditions = array(
+			      'conditions'=>'id='.$id);
+		$this->_view->usuarios=$this->db->find(
+			'usuarios',
+			'first',
+			$conditions
+		);
+
+		$this->_view->titulo="Editar usuarios";
+		$this->_view->renderizar('edit');
+
+
+	}
+}
+
+
+public function add(){
+
+	    $pass = new Password();
+		
+
+		//if que valida que tenga valores post para hacer el proceso de incriptacion de contraseña
+		if ($_POST) {
+			//llmamo al metodo para incriptar
+			$cryp=$pass->getPassword($_POST['password']);
+       //quito el passwork original
+       unset($_POST['password']);
+       //agrego el password ya incrytado
+     $_POST=$_POST+array('password' => $cryp);
+   
+		  	# code...
+		  }  
+		  
+		  
+       
+     
+
+		if ($_POST){
+			
+			if($this->db->save('usuarios',$_POST)){
+				
+	           $this->redirect(
+	      	          array('controller'=>'usuarios','action'=>'index'
+	      	          	)
+	      	        );
+        }else{$this->redirect(
+        	                  array(
+        	                  	'controller'=>'usuarios','action'=>'add'
+        	               )
+        	          );
+        }
+		}else{
+
+			$this->_view->titulo="Agregar usuarios";
+			$this->_view->renderizar=("add");
+
+
+		}
+		$this->_view->renderizar('add');
+
+}
+
+public function delete($id){
+	$condition='id='.$id;
+	if ($this->db->delete('usuarios', $condition)) {
+		$this->redirect(array('controller'=>'usuarios'));
+	  }
+}
+
+public function login(){
+	if($_POST){
+		$pass = new Password();
+		$filter = new Validations();
+		$auth = new Authorization();
+
+		$username = $filter->sanitizeText($_POST['username']);
+		$password = $filter->sanitizeText($_POST['password']); 
+
+		$options = array('conditions' => "username = '$username'");		
+		$usuario = $this->db->find('usuarios','first', $options);
+		if ($pass->isValid($password,$usuario['password'])) {
+			$auth->login($usuario);
+			$this->redirect(array('controller'=>'tareas'));
+		}else{
+			echo "Usuario no Valido";
+		}
+	}
+	
+	$this->_view->renderizar('login');
+
+}
+
+public function logout(){
+		$auth = new Authorization();
+		$auth->logout();
+	}
+
+
+
+}

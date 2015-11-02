@@ -1,0 +1,56 @@
+<?php
+/**
+ * clase View se usa apra las vistas 
+ */
+
+class View{
+	private $_controlador;
+/**
+ * __construct  esta fiuncion ejecuta la peticion 
+ * @param string $peticion la peticion que se esta solicitando 
+ * __construct(){
+ * 
+ * 
+ * }
+ */
+	public function __construct(Request $peticion){
+		$this->_controlador = $peticion->getControlador();
+	}
+	/**
+	 * renderizar redireciona segun la peticion hacia las vista 
+	 * @param  string $vista vista que se solicita 
+	 * @return  vista 
+	 * function redentizar(){
+	 * 
+	 * 
+	 * }
+	 * 
+	 */
+	public function renderizar($vista){
+
+
+		 $rutaView =ROOT.'views'
+		 .DS.$this->_controlador.DS.$vista.'.phtml';
+
+		 
+		 $_layoutParams = array(
+		 	'ruta_css'=>APP_URL.'views/layouts/'.DEFAULT_LAYOUT.'/css/',
+		 	'ruta_img'=>APP_URL.'views/layouts/'.DEFAULT_LAYOUT.'/img/',
+		 	'ruta_js'=>APP_URL.'views/layouts/'.DEFAULT_LAYOUT.'/js/'
+		 	);
+	
+		if(is_readable($rutaView)){
+			
+		    include_once ROOT.'views'.DS.'layouts'.DS.DEFAULT_LAYOUT.DS.'header.php';    
+          	include_once $rutaView;
+			include_once ROOT.'views'.DS.'layouts'.DS.DEFAULT_LAYOUT.DS.'footer.php';
+			exit;
+
+		}else{
+			throw new Exception("Error de Vista- view");
+			
+		}
+
+		
+    }
+}
