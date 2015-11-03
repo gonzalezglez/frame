@@ -1,0 +1,29 @@
+
+<h1>lista de usuarios</h1>
+
+ <a href="<?php echo APP_URL."usuarios/add";?>">Agregar Usuarios</a>
+
+
+<table border="1">
+	<tr>
+		<th>ID</th>
+		<th>Email</th>
+		<th>Username</th>
+		<th>Password</th>
+        <th>status</th>
+        <th>Accion</th>
+	</tr>
+<?php foreach ($this->usuario as $usuarios): ?>
+	<tr>
+		<td><?php echo $usuarios["id"]; ?></td>
+		<td><?php echo $usuarios["email"]; ?></td>
+		<td><?php echo $usuarios["username"]; ?></td>
+		<td><?php echo $usuarios["password"]; ?></td>
+		<td><?php echo $usuarios["status"]; ?></td>
+		<td> <a href="<?php echo APP_URL."usuarios/edit/".$usuarios['id'];?>">Editar</a>|<a href="<?php echo APP_URL."usuarios/delete/".$usuarios['id'];?>">Eliminar</a>
+		 </td>
+	</tr>
+<?php endforeach; ?>
+
+</table>
+
